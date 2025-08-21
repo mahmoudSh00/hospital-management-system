@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة المرضى - مستشفى الوحدة درنة</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-hospital"></i>
+                مستشفى الوحدة درنة
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            <i class="bi bi-house"></i> الرئيسية
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="add-patient.html">
+                            <i class="bi bi-person-plus"></i> إضافة مريض
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="patients.html">
+                            <i class="bi bi-people-fill"></i> إدارة المرضى
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="statistics.html">
+                            <i class="bi bi-graph-up"></i> الإحصائيات الشهرية
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="users.html">
+                            <i class="bi bi-people"></i> قائمة المستخدمين
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> <span id="currentUser">د. أحمد محمد</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="logout()">
+                                <i class="bi bi-box-arrow-right"></i> تسجيل الخروج
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h4><i class="bi bi-people-fill"></i> إدارة المرضى</h4>
+                        <div class="btn-group">
+                            <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-trash"></i> حذف المرضى
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item text-danger" href="#" onclick="deleteAllPatients()">
+                                    <i class="bi bi-trash-fill"></i> حذف جميع المرضى
+                                </a></li>
+                                <li><a class="dropdown-item text-warning" href="#" onclick="showDeleteByDateModal()">
+                                    <i class="bi bi-calendar-x"></i> حذف المرضى بالفترة
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-info" href="#" onclick="showBulkDeleteModal()">
+                                    <i class="bi bi-check2-square"></i> حذف متعدد
+                                </a></li>
+                            </ul>
+                            <button class="btn btn-light" onclick="exportPatients()">
+                                <i class="bi bi-download"></i> تصدير البيانات
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Search and Filter -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control" id="searchPatients" placeholder="البحث في المرضى...">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select" id="filterGender" onchange="filterPatients()">
+                                    <option value="">جميع الأجناس</option>
+                                    <option value="male">ذكر</option>
+                                    <option value="female">أنثى</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select" id="filterAge" onchange="filterPatients()">
+                                    <option value="">جميع الأعمار</option>
+                                    <option value="0-18">0-18 سنة</option>
+                                    <option value="19-35">19-35 سنة</option>
+                                    <option value="36-50">36-50 سنة</option>
+                                    <option value="51-65">51-65 سنة</option>
+                                    <option value="65+">أكثر من 65 سنة</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="date" class="form-control" id="filterDate" onchange="filterPatients()" placeholder="تاريخ الزيارة">
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-outline-secondary w-100" onclick="clearFilters()">
+                                    <i class="bi bi-x-circle"></i> مسح الفلاتر
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Patients Table -->
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>
+                                            <input type="checkbox" id="selectAllPatients" onchange="toggleSelectAll()">
+                                        </th>
+                                        <th>الاسم</th>
+                                        <th>عنوان السكن</th>
+                                        <th>الهاتف</th>
+                                        <th>العمر</th>
+                                        <th>الجنس</th>
+                                        <th>تاريخ الزيارة</th>
+                                        <th>الحالة الطبية</th>
+                                        <th>الطبيب المعالج</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="patientsTable">
+                                    <!-- سيتم ملء البيانات بواسطة JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <nav aria-label="صفحات المرضى">
+                            <ul class="pagination justify-content-center" id="patientsPagination">
+                                <!-- سيتم إنشاء الصفحات بواسطة JavaScript -->
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Patient Modal -->
+    <div class="modal fade" id="editPatientModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تعديل بيانات المريض</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editPatientForm">
+                        <input type="hidden" id="editPatientId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editFullName" class="form-label">الاسم الكامل *</label>
+                                <input type="text" class="form-control" id="editFullName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editAddress" class="form-label">عنوان السكن *</label>
+                                <input type="text" class="form-control" id="editAddress" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editPhoneNumber" class="form-label">رقم الهاتف *</label>
+                                <input type="tel" class="form-control" id="editPhoneNumber" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="editAge" class="form-label">العمر</label>
+                                <input type="number" class="form-control" id="editAge" min="0" max="120">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="editGender" class="form-label">الجنس *</label>
+                                <select class="form-select" id="editGender" required>
+                                    <option value="male">ذكر</option>
+                                    <option value="female">أنثى</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editVisitDate" class="form-label">تاريخ الزيارة *</label>
+                                <input type="date" class="form-control" id="editVisitDate" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editMedicalCondition" class="form-label">الحالة الطبية *</label>
+                            <textarea class="form-control" id="editMedicalCondition" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPrescription" class="form-label">الوصفة الطبية</label>
+                            <textarea class="form-control" id="editPrescription" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editNotes" class="form-label">ملاحظات</label>
+                            <textarea class="form-control" id="editNotes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" onclick="updatePatient()">
+                        <i class="bi bi-check-circle"></i> حفظ التغييرات
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Patient Details Modal -->
+    <div class="modal fade" id="viewPatientModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تفاصيل المريض</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="patientDetails">
+                    <!-- سيتم ملء التفاصيل بواسطة JavaScript -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                    <button type="button" class="btn btn-primary" onclick="printPatientDetails()">
+                        <i class="bi bi-printer"></i> طباعة
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete by Date Range Modal -->
+    <div class="modal fade" id="deleteByDateModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title">
+                        <i class="bi bi-calendar-x"></i> حذف المرضى بالفترة الزمنية
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <strong>تحذير:</strong> سيتم حذف جميع المرضى في الفترة المحددة نهائياً ولا يمكن التراجع عن هذا الإجراء.
+                    </div>
+                    <form id="deleteByDateForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="deleteFromDate" class="form-label">من تاريخ *</label>
+                                <input type="date" class="form-control" id="deleteFromDate" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="deleteToDate" class="form-label">إلى تاريخ *</label>
+                                <input type="date" class="form-control" id="deleteToDate" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">معاينة المرضى المحددين للحذف:</label>
+                            <div id="previewDeleteList" class="border rounded p-3 bg-light" style="max-height: 200px; overflow-y: auto;">
+                                <p class="text-muted">يرجى تحديد الفترة الزمنية لمعاينة المرضى</p>
+                            </div>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="confirmDeleteByDate" required>
+                            <label class="form-check-label text-danger" for="confirmDeleteByDate">
+                                أؤكد أنني أريد حذف جميع المرضى في الفترة المحددة نهائياً
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-info" onclick="previewDeleteByDate()">
+                        <i class="bi bi-eye"></i> معاينة
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="deletePatientsByDateRange()" disabled id="confirmDeleteByDateBtn">
+                        <i class="bi bi-trash"></i> حذف نهائي
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Delete Modal -->
+    <div class="modal fade" id="bulkDeleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title">
+                        <i class="bi bi-check2-square"></i> حذف متعدد للمرضى
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>معلومة:</strong> يمكنك تحديد المرضى المراد حذفهم من الجدول الرئيسي باستخدام مربعات الاختيار.
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">المرضى المحددون للحذف:</label>
+                        <div id="selectedPatientsForDelete" class="border rounded p-3 bg-light" style="max-height: 300px; overflow-y: auto;">
+                            <p class="text-muted">لم يتم تحديد أي مرضى</p>
+                        </div>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="confirmBulkDelete" required>
+                        <label class="form-check-label text-danger" for="confirmBulkDelete">
+                            أؤكد أنني أريد حذف المرضى المحددين نهائياً
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-danger" onclick="bulkDeletePatients()" disabled id="confirmBulkDeleteBtn">
+                        <i class="bi bi-trash"></i> حذف المحددين
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <div class="container">
+            <p>&copy; 2024 مستشفى الوحدة درنة - جميع الحقوق محفوظة</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Configuration -->
+    <script src="config.js"></script>
+    <!-- Performance Optimizer -->
+    <script src="js/performance-optimizer.js"></script>
+    <!-- Storage Manager -->
+    <script src="js/storage-manager.js"></script>
+    <!-- Search Optimizer -->
+    <script src="js/search-optimizer.js"></script>
+    <!-- Custom JS -->
+    <script src="js/main.js"></script>
+    <script src="js/enhanced-patients-management.js"></script>
+</body>
+</html>

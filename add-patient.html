@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إضافة مريض - مستشفى الوحدة درنة</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-hospital"></i>
+                مستشفى الوحدة درنة
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            <i class="bi bi-house"></i> الرئيسية
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="add-patient.html">
+                            <i class="bi bi-person-plus"></i> إضافة مريض
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="statistics.html">
+                            <i class="bi bi-graph-up"></i> الإحصائيات الشهرية
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="users.html">
+                            <i class="bi bi-people"></i> قائمة المستخدمين
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> <span id="currentUser">د. أحمد محمد</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="logout()">
+                                <i class="bi bi-box-arrow-right"></i> تسجيل الخروج
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4><i class="bi bi-person-plus"></i> إضافة مريض جديد</h4>
+                    </div>
+                    <div class="card-body">
+                        <form id="patientForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="fullName" class="form-label">الاسم الكامل *</label>
+                                    <input type="text" class="form-control" id="fullName" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="address" class="form-label">عنوان السكن *</label>
+                                    <input type="text" class="form-control" id="address" required placeholder="مثال: شارع الجمهورية، درنة">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="phoneNumber" class="form-label">رقم الهاتف *</label>
+                                    <input type="tel" class="form-control" id="phoneNumber" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="visitDate" class="form-label">تاريخ الزيارة *</label>
+                                    <input type="date" class="form-control" id="visitDate" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="age" class="form-label">العمر</label>
+                                    <input type="number" class="form-control" id="age" min="0" max="120">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="gender" class="form-label">الجنس</label>
+                                    <select class="form-select" id="gender">
+                                        <option value="">اختر الجنس</option>
+                                        <option value="male">ذكر</option>
+                                        <option value="female">أنثى</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="medicalCondition" class="form-label">الحالة الطبية *</label>
+                                <textarea class="form-control" id="medicalCondition" rows="4" required 
+                                    placeholder="اكتب تفاصيل الحالة الطبية والأعراض والتشخيص..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="prescription" class="form-label">الوصفة الطبية</label>
+                                <textarea class="form-control" id="prescription" rows="3" 
+                                    placeholder="اكتب الأدوية والجرعات المطلوبة..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="notes" class="form-label">ملاحظات إضافية</label>
+                                <textarea class="form-control" id="notes" rows="2" 
+                                    placeholder="أي ملاحظات أخرى..."></textarea>
+                            </div>
+                            
+                            <div class="d-flex gap-2 flex-wrap">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-check-circle"></i> إضافة المريض
+                                </button>
+                                <button type="button" class="btn btn-info" onclick="printPrescription()" id="printBtn" disabled>
+                                    <i class="bi bi-printer"></i> طباعة الروشتة
+                                </button>
+                                <button type="reset" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-clockwise"></i> إعادة تعيين
+                                </button>
+                                <a href="index.html" class="btn btn-outline-primary">
+                                    <i class="bi bi-house"></i> العودة للرئيسية
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Alert -->
+        <div class="alert alert-success alert-dismissible fade" role="alert" id="successAlert">
+            <i class="bi bi-check-circle-fill"></i>
+            <strong>تم بنجاح!</strong> تم إضافة المريض بنجاح.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </div>
+
+    <!-- Prescription Print Modal -->
+    <div class="modal fade" id="prescriptionModal" tabindex="-1">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">طباعة الروشتة</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="prescriptionContent">
+                    <!-- سيتم ملء محتوى الروشتة هنا -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="window.print()">
+                        <i class="bi bi-printer"></i> طباعة
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <div class="container">
+            <p>&copy; 2025 by mahmoud shinneb مستشفى الوحدة درنة - جميع الحقوق محفوظة</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="js/main.js"></script>
+    <script src="js/patient.js"></script>
+</body>
+</html>

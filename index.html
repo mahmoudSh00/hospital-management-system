@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مستشفى الوحدة درنة</title>
+    <!-- Bootstrap CSS with preload -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"></noscript>
+    <!-- Bootstrap Icons with preload -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet"></noscript>
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-hospital"></i>
+                مستشفى الوحدة درنة
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">
+                            <i class="bi bi-house"></i> الرئيسية
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="add-patient.html">
+                            <i class="bi bi-person-plus"></i> إضافة مريض
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="patients.html">
+                            <i class="bi bi-people-fill"></i> إدارة المرضى
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="statistics.html">
+                            <i class="bi bi-graph-up"></i> الإحصائيات الشهرية
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="users.html">
+                            <i class="bi bi-people"></i> قائمة المستخدمين
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> <span id="currentUser">د. أحمد محمد</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="logout()">
+                                <i class="bi bi-box-arrow-right"></i> تسجيل الخروج
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Welcome Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card bg-gradient-primary text-white">
+                    <div class="card-body text-center">
+                        <h1 class="card-title">
+                            <i class="bi bi-hospital-fill"></i>
+                            مرحباً بكم في مستشفى الوحدة درنة
+                        </h1>
+                        <p class="card-text lead">نظام إدارة المرضى والمعلومات الطبية</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="row mt-4">
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="card text-center bg-success text-white">
+                    <div class="card-body">
+                        <i class="bi bi-people-fill display-4"></i>
+                        <h4 class="card-title mt-2">المرضى اليوم</h4>
+                        <h2 id="todayPatients">25</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="card text-center bg-info text-white">
+                    <div class="card-body">
+                        <i class="bi bi-calendar-month display-4"></i>
+                        <h4 class="card-title mt-2">هذا الشهر</h4>
+                        <h2 id="monthPatients">342</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="card text-center bg-warning text-white">
+                    <div class="card-body">
+                        <i class="bi bi-person-badge display-4"></i>
+                        <h4 class="card-title mt-2">المستخدمين</h4>
+                        <h2 id="totalUsers">12</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="card text-center bg-danger text-white">
+                    <div class="card-body">
+                        <i class="bi bi-exclamation-triangle display-4"></i>
+                        <h4 class="card-title mt-2">حالات طارئة</h4>
+                        <h2 id="emergencyCases">3</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <h3>الإجراءات السريعة</h3>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-person-plus-fill display-4 text-primary"></i>
+                        <h5 class="card-title mt-3">إضافة مريض جديد</h5>
+                        <p class="card-text">قم بإضافة مريض جديد إلى النظام</p>
+                        <a href="add-patient.html" class="btn btn-primary">إضافة مريض</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-graph-up display-4 text-success"></i>
+                        <h5 class="card-title mt-3">عرض الإحصائيات</h5>
+                        <p class="card-text">اطلع على الإحصائيات الشهرية</p>
+                        <a href="statistics.html" class="btn btn-success">عرض الإحصائيات</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-people-fill display-4 text-info"></i>
+                        <h5 class="card-title mt-3">إدارة المستخدمين</h5>
+                        <p class="card-text">إدارة المستخدمين والصلاحيات</p>
+                        <a href="users.html" class="btn btn-info">إدارة المستخدمين</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Patients -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="bi bi-clock-history"></i> آخر المرضى المضافين</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>الاسم</th>
+                                        <th>رقم الهوية</th>
+                                        <th>التاريخ</th>
+                                        <th>الحالة</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentPatientsTable">
+                                    <!-- سيتم ملء البيانات بواسطة JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <div class="container">
+            <p>&copy; 2024 مستشفى الوحدة درنة - جميع الحقوق محفوظة</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS with defer -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+    <!-- Configuration -->
+    <script src="config.js" defer></script>
+    <!-- Performance Optimizer -->
+    <script src="js/performance-optimizer.js" defer></script>
+    <!-- Storage Manager -->
+    <script src="js/storage-manager.js" defer></script>
+    <!-- Search Optimizer -->
+    <script src="js/search-optimizer.js" defer></script>
+    <!-- Network Optimizer -->
+    <script src="js/network-optimizer.js" defer></script>
+    <!-- Performance Monitor -->
+    <script src="js/performance-monitor.js" defer></script>
+    <!-- Custom JS -->
+    <script src="js/main.js" defer></script>
+</body>
+</html>

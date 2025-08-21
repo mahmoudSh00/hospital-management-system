@@ -1,0 +1,35 @@
+{
+  "name": "hospital-management-system",
+  "version": "1.0.0",
+  "description": "نظام إدارة المرضى والمعلومات الطبية - مستشفى الوحدة درنة",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx live-server .",
+    "build": "echo 'No build process needed for static site'",
+    "deploy": "surge ."
+  },
+  "keywords": [
+    "hospital",
+    "patient-management",
+    "medical",
+    "healthcare",
+    "arabic",
+    "libya",
+    "derna"
+  ],
+  "author": "مستشفى الوحدة درنة",
+  "license": "MIT",
+  "homepage": "https://github.com/YOUR_USERNAME/hospital-management-system",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/hospital-management-system.git"
+  },
+  "bugs": {
+    "url": "https://github.com/YOUR_USERNAME/hospital-management-system/issues"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2",
+    "serve": "^14.2.1"
+  }
+}
